@@ -1,6 +1,6 @@
 (function() {
   let _ = function(element) {
-    u = {
+    let u = {
       first() {
         return element[0];
       },
@@ -111,9 +111,15 @@
 
       has(prop) {
         return prop in element;
-      }
+      },
 
     };
+
+    ['isElement', 'isArray', 'isObject', 'isFunction',
+      'isBoolean', 'isString', 'isNumber'].forEach(method => {
+
+      u[method] = function() {return _[method](element) };
+    });
 
     return u;
   }
@@ -141,6 +147,35 @@
 
       return result;
     };
+
+  _.isElement = function(obj) {
+    return obj && obj.nodeType === 1;
+  };
+
+  _.isArray = Array.isArray || function(obj) {
+    return toString.call(obj) === '[object Array]';
+  };
+
+  _.isObject = function(obj) {
+    return obj !== null &&
+      (typeof obj === 'object' || typeof obj === 'function');
+  };
+
+  _.isFunction = function(obj) {
+    return typeof obj === 'function';
+  };
+
+  _.isBoolean = function(value) {
+    return typeof value === 'boolean' || value instanceof Boolean;
+  };
+
+  _.isString = function(value) {
+    return toString.call(value) === '[object String]';
+  };
+
+  _.isNumber = function(value) {
+    return toString.call(value) === '[object Number]';
+  };
 
   window._ = _;
 })();
